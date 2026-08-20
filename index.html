@@ -51,9 +51,17 @@
                     <div class="player-metadata glass-panel">
                         <h1 id="player-video-title">No Video Loaded</h1>
                         <div class="player-actions">
-                            <button id="btn-download-options" class="secondary-btn glow-btn">
-                                <i class="fa-solid fa-download"></i> Download Options
-                            </button>
+                            <div class="download-controls">
+                                <select id="download-quality" class="glass-select">
+                                    <option value="max">Max Quality (1080p/4K)</option>
+                                    <option value="720">720p HD</option>
+                                    <option value="480">480p</option>
+                                    <option value="audio">MP3 Audio Only</option>
+                                </select>
+                                <button id="btn-download" class="glow-btn">
+                                    <i class="fa-solid fa-download"></i> Download
+                                </button>
+                            </div>
                             <button id="btn-save-library" class="secondary-btn glow-btn">
                                 <i class="fa-solid fa-bookmark"></i> Save to Library
                             </button>
