@@ -29,12 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return null;
     }
 
-    function loadVideoToPlayer(videoId) {
+    function loadVideoToPlayer(videoId, title) {
         activeVideoId = videoId;
         const playerFrame = document.getElementById("main-player-frame");
         playerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
         
-        document.getElementById("player-video-title").textContent = `P1X3ELZ Video Player Stream - ID: ${videoId}`;
+        document.getElementById("player-video-title").textContent = title || `P1X3ELZ Stream - ID: ${videoId}`;
 
         document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
         document.querySelectorAll(".view-panel").forEach(v => v.classList.remove("active"));
@@ -53,38 +53,58 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document.getElementById("btn-yt-search").addEventListener("click", () => {
-        const query = document.getElementById("yt-search-query").value.trim();
-        const detectedId = parseYouTubeID(query);
-
-        if (detectedId) {
-            showActionBar(detectedId);
-        } else if (query) {
-            window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, "_blank");
-        }
+    // Native Search Fetcher
+    document.getElementById("btn-yt-search").addEventListener("click", performSearch);
+    document.getElementById("yt-search-query").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") performSearch();
     });
 
-    function showActionBar(videoId) {
-        const actionBar = document.getElementById("browser-action-bar");
-        if (videoId) {
-            activeVideoId = videoId;
-            actionBar.style.display = "flex";
-            document.getElementById("detected-video-title").textContent = `Ready to import Video ID: ${videoId}`;
-        } else {
-            actionBar.style.display = "none";
+    async function performSearch() {
+        const query = document.getElementById("yt-search-query").value.trim();
+        const statusEl = document.getElementById("search-status");
+        const gridEl = document.getElementById("search-results-grid");
+
+        if (!query) return;
+
+        const directId = parseYouTubeID(query);
+        if (directId) {
+            loadVideoToPlayer(directId);
+            return;
+        }
+
+        statusEl.textContent = "Searching YouTube...";
+        gridEl.innerHTML = "";
+
+        try {
+            const res = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=videos`);
+            const data = await res.json();
+
+            if (!data.items || data.items.length === 0) {
+                statusEl.textContent = "No videos found. Try a different search.";
+                return;
+            }
+
+            statusEl.textContent = `Found ${data.items.length} results:`;
+
+            data.items.slice(0, 12).forEach(item => {
+                const videoId = item.url.replace("/watch?v=", "");
+                const card = document.createElement("div");
+                card.className = "library-card";
+                card.innerHTML = `
+                    <img src="${item.thumbnail}" alt="Thumbnail">
+                    <h4>${item.title}</h4>
+                `;
+                card.addEventListener("click", () => loadVideoToPlayer(videoId, item.title));
+                gridEl.appendChild(card);
+            });
+        } catch (err) {
+            statusEl.textContent = "Failed to fetch search results. Check connection.";
         }
     }
 
-    document.getElementById("btn-import-detected").addEventListener("click", () => {
-        if (activeVideoId) {
-            loadVideoToPlayer(activeVideoId);
-        }
-    });
-
     document.getElementById("btn-download-options").addEventListener("click", () => {
         if (!activeVideoId) return;
-        const downloadUrl = `https://www.y2mate.com/youtube/${activeVideoId}`;
-        window.open(downloadUrl, "_blank");
+        window.open(`https://www.y2mate.com/youtube/${activeVideoId}`, "_blank");
     });
 
     document.getElementById("btn-save-library").addEventListener("click", () => {
