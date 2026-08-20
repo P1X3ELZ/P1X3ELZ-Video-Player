@@ -20,7 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function parseYouTubeID(url) {
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
+        if (match && match[2].length === 11) {
+            return match[2];
+        }
+        if (url.length === 11 && !url.includes(" ")) {
+            return url;
+        }
+        return null;
     }
 
     function loadVideoToPlayer(videoId) {
@@ -54,9 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (detectedId) {
             showActionBar(detectedId);
         } else if (query) {
-            const browserFrame = document.getElementById("youtube-browser-frame");
-            browserFrame.src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query)}`;
-            showActionBar(null);
+            window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, "_blank");
         }
     });
 
