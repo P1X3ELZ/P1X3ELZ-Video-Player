@@ -21,7 +21,7 @@
                     <i class="fa-solid fa-link"></i> Direct Link
                 </button>
                 <button class="nav-btn" id="tab-browse">
-                    <i class="fa-brands fa-youtube"></i> Search & Import
+                    <i class="fa-brands fa-youtube"></i> Search Videos
                 </button>
                 <button class="nav-btn" id="tab-library">
                     <i class="fa-solid fa-film"></i> Saved Library
@@ -45,25 +45,21 @@
                 </div>
             </section>
 
-            <!-- View 2: YouTube Search & Import -->
+            <!-- View 2: Native YouTube Search -->
             <section id="view-browse" class="view-panel">
                 <div class="card glass-panel glow-box">
-                    <h2>Search or Quick Load</h2>
-                    <p>Enter a YouTube Video ID, standard video link, or search query below.</p>
+                    <h2>Search Videos</h2>
+                    <p>Search YouTube directly below to find and load videos.</p>
                     <div class="input-group">
-                        <input type="text" id="yt-search-query" placeholder="Paste link, video ID, or search terms..." />
+                        <input type="text" id="yt-search-query" placeholder="Search YouTube (e.g. MrBeast)..." />
                         <button id="btn-yt-search" class="primary-btn glow-btn">
-                            <i class="fa-solid fa-magnifying-glass"></i> Process Query
+                            <i class="fa-solid fa-magnifying-glass"></i> Search
                         </button>
                     </div>
                 </div>
 
-                <div class="browser-preview-bar glass-panel glow-box" id="browser-action-bar" style="display: none; margin-top: 20px;">
-                    <span id="detected-video-title">Ready to stream</span>
-                    <button id="btn-import-detected" class="action-btn glow-btn">
-                        <i class="fa-solid fa-circle-plus"></i> Open in P1X3ELZ Player
-                    </button>
-                </div>
+                <div id="search-status" class="status-msg"></div>
+                <div class="library-grid" id="search-results-grid"></div>
             </section>
 
             <!-- View 3: Video Player Screen -->
