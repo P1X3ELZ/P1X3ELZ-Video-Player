@@ -124,7 +124,6 @@ body {
     padding: 36px;
     max-width: 680px;
     margin-top: 20px;
-    margin-bottom: 24px;
 }
 
 .card h2 {
@@ -187,10 +186,20 @@ input[type="text"]:focus {
     border: 1px solid var(--glass-border);
 }
 
-.status-msg {
-    margin-bottom: 16px;
-    color: var(--text-muted);
-    font-size: 0.95rem;
+.glass-select {
+    background: rgba(10, 5, 20, 0.8);
+    color: #fff;
+    border: 1px solid var(--glass-border);
+    padding: 14px 16px;
+    border-radius: 14px;
+    outline: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.download-controls {
+    display: flex;
+    gap: 10px;
 }
 
 .player-container {
@@ -221,6 +230,7 @@ input[type="text"]:focus {
 .player-actions {
     display: flex;
     gap: 14px;
+    align-items: center;
 }
 
 .section-title {
@@ -262,7 +272,5 @@ input[type="text"]:focus {
     color: var(--text-main);
     overflow: hidden;
     text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
 }
