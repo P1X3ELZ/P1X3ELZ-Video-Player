@@ -29,12 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return null;
     }
 
-    function loadVideoToPlayer(videoId, title) {
+    function loadVideoToPlayer(videoId) {
         activeVideoId = videoId;
         const playerFrame = document.getElementById("main-player-frame");
-        playerFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        playerFrame.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
         
-        document.getElementById("player-video-title").textContent = title || `P1X3ELZ Stream - ID: ${videoId}`;
+        document.getElementById("player-video-title").textContent = `P1X3ELZ Video Player Stream - ID: ${videoId}`;
 
         document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
         document.querySelectorAll(".view-panel").forEach(v => v.classList.remove("active"));
@@ -53,58 +53,42 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Native Search Fetcher
-    document.getElementById("btn-yt-search").addEventListener("click", performSearch);
-    document.getElementById("yt-search-query").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") performSearch();
-    });
+    // Direct, Ad-Free Download via Cobalt API
+    document.getElementById("btn-download").addEventListener("click", async () => {
+        if (!activeVideoId) return;
 
-    async function performSearch() {
-        const query = document.getElementById("yt-search-query").value.trim();
-        const statusEl = document.getElementById("search-status");
-        const gridEl = document.getElementById("search-results-grid");
+        const downloadBtn = document.getElementById("btn-download");
+        const quality = document.getElementById("download-quality").value;
+        const videoUrl = `https://www.youtube.com/watch?v=${activeVideoId}`;
 
-        if (!query) return;
-
-        const directId = parseYouTubeID(query);
-        if (directId) {
-            loadVideoToPlayer(directId);
-            return;
-        }
-
-        statusEl.textContent = "Searching YouTube...";
-        gridEl.innerHTML = "";
+        downloadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
 
         try {
-            const res = await fetch(`https://pipedapi.kavin.rocks/search?q=${encodeURIComponent(query)}&filter=videos`);
-            const data = await res.json();
-
-            if (!data.items || data.items.length === 0) {
-                statusEl.textContent = "No videos found. Try a different search.";
-                return;
-            }
-
-            statusEl.textContent = `Found ${data.items.length} results:`;
-
-            data.items.slice(0, 12).forEach(item => {
-                const videoId = item.url.replace("/watch?v=", "");
-                const card = document.createElement("div");
-                card.className = "library-card";
-                card.innerHTML = `
-                    <img src="${item.thumbnail}" alt="Thumbnail">
-                    <h4>${item.title}</h4>
-                `;
-                card.addEventListener("click", () => loadVideoToPlayer(videoId, item.title));
-                gridEl.appendChild(card);
+            const response = await fetch("https://api.cobalt.tools/api/json", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    url: videoUrl,
+                    vQuality: quality === "audio" ? "720" : quality,
+                    isAudioOnly: quality === "audio"
+                })
             });
-        } catch (err) {
-            statusEl.textContent = "Failed to fetch search results. Check connection.";
-        }
-    }
 
-    document.getElementById("btn-download-options").addEventListener("click", () => {
-        if (!activeVideoId) return;
-        window.open(`https://www.y2mate.com/youtube/${activeVideoId}`, "_blank");
+            const data = await response.json();
+
+            if (data.url) {
+                window.open(data.url, "_blank");
+            } else {
+                alert("Could not generate direct download link. Try another quality.");
+            }
+        } catch (error) {
+            alert("Download service busy. Please try again.");
+        } finally {
+            downloadBtn.innerHTML = `<i class="fa-solid fa-download"></i> Download`;
+        }
     });
 
     document.getElementById("btn-save-library").addEventListener("click", () => {
