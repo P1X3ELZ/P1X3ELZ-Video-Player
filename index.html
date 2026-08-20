@@ -14,17 +14,17 @@
         <aside class="sidebar glass-panel">
             <div class="brand">
                 <i class="fa-solid fa-play-circle glow-icon"></i>
-                <h2>P1X3ELZ <span>Player</span></h2>
+                <h2>P1X3ELZ <span>Video Player</span></h2>
             </div>
             <nav class="nav-links">
                 <button class="nav-btn active" id="tab-import">
                     <i class="fa-solid fa-link"></i> Direct Link
                 </button>
                 <button class="nav-btn" id="tab-browse">
-                    <i class="fa-brands fa-youtube"></i> Browse YouTube
+                    <i class="fa-brands fa-youtube"></i> Search & Import
                 </button>
                 <button class="nav-btn" id="tab-library">
-                    <i class="fa-solid fa-film"></i> Imported Library
+                    <i class="fa-solid fa-film"></i> Saved Library
                 </button>
             </nav>
         </aside>
@@ -45,24 +45,24 @@
                 </div>
             </section>
 
-            <!-- View 2: Built-in YouTube Browser -->
+            <!-- View 2: YouTube Search & Import -->
             <section id="view-browse" class="view-panel">
-                <div class="browser-header">
-                    <div class="search-bar-container">
-                        <input type="text" id="yt-search-query" placeholder="Search YouTube or paste video link..." />
-                        <button id="btn-yt-search" class="primary-btn glow-btn"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                <div class="card glass-panel glow-box">
+                    <h2>Search or Quick Load</h2>
+                    <p>Enter a YouTube Video ID, standard video link, or search query below.</p>
+                    <div class="input-group">
+                        <input type="text" id="yt-search-query" placeholder="Paste link, video ID, or search terms..." />
+                        <button id="btn-yt-search" class="primary-btn glow-btn">
+                            <i class="fa-solid fa-magnifying-glass"></i> Process Query
+                        </button>
                     </div>
                 </div>
-                
-                <div class="browser-preview-bar glass-panel glow-box" id="browser-action-bar" style="display: none;">
-                    <span id="detected-video-title">Detected YouTube Video</span>
-                    <button id="btn-import-detected" class="action-btn glow-btn">
-                        <i class="fa-solid fa-circle-plus"></i> Import to P1X3ELZ Video Player
-                    </button>
-                </div>
 
-                <div class="iframe-wrapper glass-panel">
-                    <iframe id="youtube-browser-frame" src="https://www.youtube.com/embed?listType=search&list=trending" allowfullscreen></iframe>
+                <div class="browser-preview-bar glass-panel glow-box" id="browser-action-bar" style="display: none; margin-top: 20px;">
+                    <span id="detected-video-title">Ready to stream</span>
+                    <button id="btn-import-detected" class="action-btn glow-btn">
+                        <i class="fa-solid fa-circle-plus"></i> Open in P1X3ELZ Player
+                    </button>
                 </div>
             </section>
 
